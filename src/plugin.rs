@@ -8,7 +8,7 @@ pub struct Plugin {
 }
 
 impl Plugin {
-    /* */
+    #[allow(dead_code)]
     pub fn run_warm(&mut self, state: &str) -> JsResult<String> {
         self.context
             .register_global_property("state", state, Attribute::all());
@@ -68,4 +68,35 @@ impl PluginMetadata {
 
         Ok(Self { name })
     }
+}
+
+use std::fs;
+use std::io;
+pub fn load_plugin_folder(path: &str) -> io::Result<Vec<Plugin>> {
+    let entries = fs::read_dir(path)?;
+
+    let mut plugins: Vec<Plugin> = Vec::new();
+
+    for entry in entries {
+        if let Ok(entry) = entry {
+            let entry_path = entry.path();
+            let entry_path = entry_path.to_str().unwrap();
+
+            if let Ok(file_type) = entry.file_type() {
+                if file_type.is_dir() {
+                    let mut nested_plugins = load_plugin_folder(entry_path)?;
+                    plugins.append(&mut nested_plugins)
+                } else {
+                    let script = fs::read_to_string(entry_path)?;
+                    plugins.push(Plugin::from_script(script).unwrap());
+                }
+
+                println!("{:?}: {:?}", entry.path(), file_type);
+            } else {
+                println!("Couldn't get file type for {:?}", entry.path());
+            }
+        }
+    }
+
+    Ok(plugins)
 }

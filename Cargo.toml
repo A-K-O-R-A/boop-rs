@@ -7,3 +7,6 @@ edition = "2021"
 
 [dependencies]
 boa_engine = "0.16.0"
+eframe = "0.20.0"
+egui_extras = "0.20.0"
+enum-map = { version = "2", features = ["serde"] }
