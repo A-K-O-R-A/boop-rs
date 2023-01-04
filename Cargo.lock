@@ -143,9 +143,9 @@ checksum = "8da52d66c7071e2e3fa2a1e5c6d088fec47b593032b254f5e980de8ea54454d6"
 
 [[package]]
 name = "atomic_refcell"
-version = "0.1.8"
+version = "0.1.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "73b5e5f48b927f04e952dedc932f31995a65a0bf65ec971c74436e51bf6e970d"
+checksum = "857253367827bd9d0fd973f0ef15506a96e79e41b0ad7aa691203a4e3214f6c8"
 
 [[package]]
 name = "autocfg"
@@ -250,16 +250,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "boop-rs"
-version = "0.1.0"
-dependencies = [
- "boa_engine",
- "eframe",
- "egui_extras",
- "enum-map",
-]
-
-[[package]]
 name = "bumpalo"
 version = "3.11.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -353,6 +343,10 @@ dependencies = [
 ]
 
 [[package]]
+name = "cli"
+version = "0.1.0"
+
+[[package]]
 name = "clipboard-win"
 version = "4.4.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -421,6 +415,13 @@ checksum = "35ed6e9d84f0b51a7f52daf1c7d71dd136fd7a3f41a8462b8cdb8c78d920fad4"
 dependencies = [
  "bytes",
  "memchr",
+]
+
+[[package]]
+name = "core"
+version = "0.1.0"
+dependencies = [
+ "boa_engine",
 ]
 
 [[package]]
@@ -1070,6 +1071,16 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "20c33975a6c9d49d72c8f032a60079bf8df536954fbf9e4cee90396ace815c57"
 dependencies = [
  "gl_generator",
+]
+
+[[package]]
+name = "gui"
+version = "0.1.0"
+dependencies = [
+ "core",
+ "eframe",
+ "egui_extras",
+ "enum-map",
 ]
 
 [[package]]

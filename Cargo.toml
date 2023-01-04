@@ -1,12 +1,5 @@
-[package]
-name = "boop-rs"
-version = "0.1.0"
-edition = "2021"
+[workspace]
+members = ["core", "gui", "cli"]
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
-[dependencies]
-boa_engine = "0.16.0"
-eframe = "0.20.0"
-egui_extras = "0.20.0"
-enum-map = { version = "2", features = ["serde"] }
+default-members = ["core", "gui"]

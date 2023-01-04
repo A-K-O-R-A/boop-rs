@@ -1,25 +1,42 @@
-use eframe::egui;
+use core::plugins;
+use eframe::egui::{self, Window};
 
 mod editor;
-mod plugin;
 mod syntax_highlighting;
 
 #[derive(Default)]
 struct MyApp {
     code_editor: editor::CodeEditor,
-    plugins: Vec<plugin::Plugin>,
+    settings_open: bool,
+    plugins: Vec<Box<dyn plugins::Plugin>>,
 }
 
 impl eframe::App for MyApp {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
         egui::CentralPanel::default().show(ctx, |ui| {
+            if ui.add(egui::Button::new("Settings")).clicked() {
+                println!("Open settings");
+                self.settings_open = !self.settings_open;
+            }
+
             self.code_editor.ui(ui);
         });
+
+        Window::new("Settings")
+            .open(&mut self.settings_open)
+            .show(ctx, |ui| {
+                ui.label("A");
+                ui.vertical(|ui| {
+                    for plugin in &self.plugins {
+                        ui.label(&plugin.metadata().name);
+                    }
+                })
+            });
     }
 }
 
 fn main() {
-    let plugins = plugin::load_plugin_folder("./plugins").unwrap();
+    let plugins = plugins::load_plugin_folder("./plugins").expect("Unable to load plugin folder");
 
     let options = eframe::NativeOptions {
         initial_window_size: Some(egui::vec2(320.0, 240.0)),
