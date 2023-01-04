@@ -5,5 +5,11 @@ edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
+[features]
+default = ["default_plugins"]
+default_plugins = ["dep:base64"]
+
 [dependencies]
 boa_engine = "0.16.0"
+cfg-if = "1.0.0"
+base64 = { version = "0.20.0", optional = true }

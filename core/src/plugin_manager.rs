@@ -1,25 +1,31 @@
+use crate::default_plugins;
+use crate::loaders::js_loader::JsPlugin;
+use crate::loaders::Plugin;
 use std::fs;
 use std::io;
+use std::path::Path;
 
-pub mod js_plugin;
-use js_plugin::JsPlugin;
-
-pub trait Plugin {
-    fn metadata(&self) -> PluginMetadata;
-    fn run(&self, state: &str) -> String;
-    fn warm(&self) -> bool;
-
-    fn from_path<P: AsRef<std::path::Path>>(path: P) -> io::Result<Self>
-    where
-        Self: Sized;
+#[derive(Default)]
+pub struct PluginManager {
+    pub plugins: Vec<Box<dyn Plugin>>,
 }
 
-#[derive(Debug, Clone)]
-pub struct PluginMetadata {
-    pub name: String,
+impl PluginManager {
+    pub fn load_plugin_folder<P: AsRef<Path>>(path: P) -> io::Result<Self> {
+        let mut plugins = load_plugin_folder(path)?;
+
+        cfg_if::cfg_if! {
+            if #[cfg(feature = "default_plugins")] {
+                plugins.push(Box::new(default_plugins::base64::Base64DecodePlugin));
+                plugins.push(Box::new(default_plugins::base64::Base64EncodePlugin));
+            }
+        }
+
+        Ok(Self { plugins })
+    }
 }
 
-pub fn load_plugin_folder(path: &str) -> io::Result<Vec<Box<dyn Plugin>>> {
+fn load_plugin_folder<P: AsRef<Path>>(path: P) -> io::Result<Vec<Box<dyn Plugin>>> {
     let entries = fs::read_dir(path)?;
 
     let mut plugins = Vec::new();
@@ -41,7 +47,7 @@ pub fn load_plugin_folder(path: &str) -> io::Result<Vec<Box<dyn Plugin>>> {
                     }
                 }
 
-                println!("{:?}: {:?}", entry.path(), file_type);
+                //println!("{:?}: {:?}", entry.path(), file_type);
             } else {
                 println!("Couldn't get file type for {:?}", entry.path());
             }

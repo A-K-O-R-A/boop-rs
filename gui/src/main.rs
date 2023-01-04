@@ -1,17 +1,17 @@
-use core::plugins;
+use core::plugin_manager::PluginManager;
 use eframe::egui::{self, Window};
 
 mod editor;
 mod syntax_highlighting;
 
 #[derive(Default)]
-struct MyApp {
+struct BoopRs {
     code_editor: editor::CodeEditor,
+    plugin_manager: PluginManager,
     settings_open: bool,
-    plugins: Vec<Box<dyn plugins::Plugin>>,
 }
 
-impl eframe::App for MyApp {
+impl eframe::App for BoopRs {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
         egui::CentralPanel::default().show(ctx, |ui| {
             if ui.add(egui::Button::new("Settings")).clicked() {
@@ -27,7 +27,7 @@ impl eframe::App for MyApp {
             .show(ctx, |ui| {
                 ui.label("A");
                 ui.vertical(|ui| {
-                    for plugin in &self.plugins {
+                    for plugin in &self.plugin_manager.plugins {
                         ui.label(&plugin.metadata().name);
                     }
                 })
@@ -36,18 +36,21 @@ impl eframe::App for MyApp {
 }
 
 fn main() {
-    let plugins = plugins::load_plugin_folder("./plugins").expect("Unable to load plugin folder");
+    let plugin_manager =
+        PluginManager::load_plugin_folder("./plugins").expect("Unable to load plugin folder");
+
+    //println!("{:?}", plugin_manager.plugins);
 
     let options = eframe::NativeOptions {
-        initial_window_size: Some(egui::vec2(320.0, 240.0)),
+        initial_window_size: Some(egui::vec2(700.0, 400.0)),
         ..Default::default()
     };
     eframe::run_native(
         "Confirm exit",
         options,
         Box::new(|_cc| {
-            Box::new(MyApp {
-                plugins,
+            Box::new(BoopRs {
+                plugin_manager,
                 ..Default::default()
             })
         }),

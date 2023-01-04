@@ -32,22 +32,6 @@ impl Plugin for JsPlugin {
     fn warm(&self) -> bool {
         self.context.is_some()
     }
-
-    fn from_path<P: AsRef<std::path::Path>>(path: P) -> io::Result<Self> {
-        let path_str = path.as_ref().to_str().unwrap();
-        let script = fs::read_to_string(path.as_ref().clone())?;
-
-        let mut context = JsPlugin::create_context(&script)
-            .expect(format!("Unable to parse JS plugin {}", path_str).as_str());
-        let metadata = PluginMetadata::from_context(&mut context)
-            .expect(format!("Unable to find metadata in JS Plugin {}", path_str).as_str());
-
-        Ok(Self {
-            metadata,
-            context: Some(context),
-            script,
-        })
-    }
 }
 
 impl JsPlugin {
@@ -73,15 +57,61 @@ impl JsPlugin {
 
         Ok(context)
     }
+
+    pub fn from_path<P: AsRef<std::path::Path>>(path: P) -> io::Result<Self> {
+        let path_str = path.as_ref().to_str().unwrap();
+        let script = fs::read_to_string(path.as_ref().clone())?;
+
+        let mut context = JsPlugin::create_context(&script)
+            .expect(format!("Unable to parse JS plugin {}", path_str).as_str());
+        let metadata = PluginMetadata::from_js_context(&mut context)
+            .expect(format!("Unable to find metadata in JS Plugin {}", path_str).as_str());
+
+        Ok(Self {
+            metadata,
+            context: None, // Some(context)
+            script,
+        })
+    }
 }
 
 impl PluginMetadata {
-    pub fn from_context(context: &mut Context) -> JsResult<Self> {
+    pub fn from_js_context(context: &mut Context) -> JsResult<Self> {
         let value = context.eval("metadata()")?;
         let obj = value.as_object().ok_or(0)?;
 
-        let name = obj.get("name", context)?.to_string(context)?.to_string();
+        let id = obj
+            .get("id", context)?
+            .as_string()
+            .expect("Plugin id is needed")
+            .to_string();
+        let name = obj
+            .get("name", context)?
+            .as_string()
+            .expect("Plugin name is needed")
+            .to_string();
+        let description = obj
+            .get("description", context)?
+            .as_string()
+            .expect("Plugin description is needed")
+            .to_string();
+        let input_type = obj
+            .get("inputType", context)?
+            .as_string()
+            .expect("Plugin inputType is needed")
+            .to_string();
+        let output_type = obj
+            .get("outputType", context)?
+            .as_string()
+            .expect("Plugin outputType is needed")
+            .to_string();
 
-        Ok(Self { name })
+        Ok(Self {
+            id,
+            name,
+            description,
+            input_type,
+            output_type,
+        })
     }
 }
