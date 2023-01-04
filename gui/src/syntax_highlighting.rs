@@ -60,9 +60,6 @@ enum TokenType {
 pub struct CodeTheme {
     dark_mode: bool,
 
-    #[cfg(feature = "syntect")]
-    syntect_theme: SyntectTheme,
-
     #[cfg(not(feature = "syntect"))]
     formats: enum_map::EnumMap<TokenType, egui::TextFormat>,
 }

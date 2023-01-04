@@ -2,7 +2,7 @@ use eframe::egui;
 
 pub struct CodeEditor {
     language: String,
-    code: String,
+    pub code: String,
 }
 
 impl Default for CodeEditor {
@@ -41,9 +41,9 @@ impl CodeEditor {
         egui::ScrollArea::vertical().show(ui, |ui| {
             ui.add(
                 egui::TextEdit::multiline(code)
-                    .font(egui::TextStyle::Monospace) // for cursor height
+                    //.font(egui::TextStyle::Monospace) // for cursor height
                     .code_editor()
-                    .desired_rows(10)
+                    .desired_rows(30)
                     .lock_focus(true)
                     .desired_width(f32::INFINITY)
                     .layouter(&mut layouter),
