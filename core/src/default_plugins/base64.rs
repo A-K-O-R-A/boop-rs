@@ -1,6 +1,6 @@
 use base64::{decode, encode};
 
-use crate::loaders::{Plugin, PluginMetadata};
+use crate::plugin::{Plugin, PluginMetadata};
 
 #[derive(Debug)]
 pub struct Base64DecodePlugin;
@@ -32,8 +32,8 @@ impl Plugin for Base64DecodePlugin {
         }
     }
 
-    fn warm(&self) -> bool {
-        true
+    fn plugin_type(&self) -> String {
+        "rs".into()
     }
 }
 
@@ -55,7 +55,7 @@ impl Plugin for Base64EncodePlugin {
         encode(state)
     }
 
-    fn warm(&self) -> bool {
-        true
+    fn plugin_type(&self) -> String {
+        "rs".into()
     }
 }

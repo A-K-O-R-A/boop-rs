@@ -1,13 +1,28 @@
 use crate::default_plugins;
-use crate::loaders::js_loader::JsPlugin;
-use crate::loaders::Plugin;
+use crate::loaders::js::JsPlugin;
+use crate::plugin::Plugin;
 use std::fs;
 use std::io;
 use std::path::Path;
 
-#[derive(Default)]
+#[derive(Debug)]
 pub struct PluginManager {
     pub plugins: Vec<Box<dyn Plugin>>,
+}
+
+impl Default for PluginManager {
+    fn default() -> Self {
+        let mut plugins: Vec<Box<dyn Plugin>> = Vec::new();
+
+        cfg_if::cfg_if! {
+            if #[cfg(feature = "default_plugins")] {
+                plugins.push(Box::new(default_plugins::base64::Base64DecodePlugin));
+                plugins.push(Box::new(default_plugins::base64::Base64EncodePlugin));
+            }
+        }
+
+        Self { plugins }
+    }
 }
 
 impl PluginManager {

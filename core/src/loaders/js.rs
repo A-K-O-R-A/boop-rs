@@ -1,4 +1,4 @@
-use super::{Plugin, PluginMetadata};
+use crate::plugin::{Plugin, PluginMetadata};
 use boa_engine::{prelude::*, property::Attribute};
 use std::fs;
 use std::io;
@@ -29,8 +29,8 @@ impl Plugin for JsPlugin {
         new_state
     }
 
-    fn warm(&self) -> bool {
-        self.context.is_some()
+    fn plugin_type(&self) -> String {
+        "js".into()
     }
 }
 
