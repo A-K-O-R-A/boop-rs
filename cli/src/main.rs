@@ -10,23 +10,30 @@ struct Cli {
 
     #[command(subcommand)]
     command: Commands,
-
-    input: String,
 }
 
 #[derive(Subcommand)]
 enum Commands {
     /// Run plugin on the provided input
     Run {
-        #[arg(short, long, value_name = "PLUGIN_ID")]
+        #[arg(required = true, value_name = "PLUGIN_ID")]
         command: String,
+
+        /// Stuff to add
+        #[arg(required = false)]
+        input: Option<String>,
     },
 
     /// List the currently loaded plugins
     ListPlugins,
 }
 
-fn main() {
+#[derive(Debug)]
+pub enum BoopError {
+    PluginNotFound(String),
+}
+
+fn main() -> Result<(), BoopError> {
     let cli = Cli::parse();
 
     let manager = if let Some(plugins_path) = &cli.plugins_folder {
@@ -54,25 +61,34 @@ fn main() {
                 )
             }
 
-            return;
+            Ok(())
         }
-        Commands::Run { command } => {
+
+        Commands::Run { command, input } => {
             let plugin = manager
                 .plugins
                 .iter()
                 .find(|p| p.metadata().id == *command || p.metadata().name == *command);
 
             if let Some(plugin) = plugin {
-                //let mut buffer = String::new();
-                let state = io::stdin()
-                    .lines()
-                    .map(|l| l.unwrap())
-                    .reduce(|acc, e| acc + &e)
-                    .unwrap_or("".into());
-                //dbg!(&state);
+                let state = if let Some(input) = input {
+                    input.clone()
+                } else {
+                    //let mut buffer = String::new();
+                    let state = io::stdin()
+                        .lines()
+                        .map(|l| l.unwrap())
+                        .reduce(|acc, e| acc + &e)
+                        .unwrap_or("".into());
+                    //dbg!(&state);
+                    state
+                };
+
                 println!("{}", plugin.run(&state));
+                Ok(())
             } else {
-                panic!("Unable to find plugin with id or name \"{}\"", command);
+                //panic!("Unable to find plugin with id or name \"{}\"", command);
+                Err(BoopError::PluginNotFound(command.clone()))
             }
         }
     }
