@@ -1,15 +1,17 @@
-use clap::{builder::Str, Parser, Subcommand};
+use clap::{Parser, Subcommand};
 use core::plugin_manager::PluginManager;
 use std::{io, path::PathBuf};
 
 #[derive(Parser)]
-#[command(author, version, about, long_about = None)]
+#[command(author, version, about, long_about = None, trailing_var_arg=true)]
 struct Cli {
     #[arg(short, long)]
     plugins_folder: Option<PathBuf>,
 
     #[command(subcommand)]
     command: Commands,
+
+    input: String,
 }
 
 #[derive(Subcommand)]
@@ -67,7 +69,7 @@ fn main() {
                     .map(|l| l.unwrap())
                     .reduce(|acc, e| acc + &e)
                     .unwrap_or("".into());
-                dbg!(&state);
+                //dbg!(&state);
                 println!("{}", plugin.run(&state));
             } else {
                 panic!("Unable to find plugin with id or name \"{}\"", command);
