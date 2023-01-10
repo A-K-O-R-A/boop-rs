@@ -60,3 +60,61 @@ impl Plugin for JsonParsePlugin {
         "rs".into()
     }
 }
+
+#[derive(Debug)]
+pub struct JsonFormatPlugin;
+
+impl Plugin for JsonFormatPlugin {
+    fn metadata(&self) -> PluginMetadata {
+        PluginMetadata {
+            id: "json.format".to_owned(),
+            name: "Format/Pretty-print json".to_owned(),
+            description: "This pretty prints an json string".to_owned(),
+            input_type: "json".to_owned(),
+            output_type: "json".to_owned(),
+        }
+    }
+
+    fn run(&self, state: &str) -> String {
+        match json::parse(state) {
+            Ok(json_value) => json::stringify_pretty(json_value, 2),
+            Err(e) => {
+                println!("{e:?}");
+                state.into()
+            }
+        }
+    }
+
+    fn plugin_type(&self) -> String {
+        "rs".into()
+    }
+}
+
+#[derive(Debug)]
+pub struct JsonMinifyPlugin;
+
+impl Plugin for JsonMinifyPlugin {
+    fn metadata(&self) -> PluginMetadata {
+        PluginMetadata {
+            id: "json.minify".to_owned(),
+            name: "Minify json".to_owned(),
+            description: "This minfies an json string".to_owned(),
+            input_type: "json".to_owned(),
+            output_type: "json".to_owned(),
+        }
+    }
+
+    fn run(&self, state: &str) -> String {
+        match json::parse(state) {
+            Ok(json_value) => json::stringify(json_value),
+            Err(e) => {
+                println!("{e:?}");
+                state.into()
+            }
+        }
+    }
+
+    fn plugin_type(&self) -> String {
+        "rs".into()
+    }
+}

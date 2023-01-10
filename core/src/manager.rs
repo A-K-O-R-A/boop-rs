@@ -26,6 +26,10 @@ fn default_plugins() -> Vec<Box<dyn Plugin>> {
     plugins.push(Box::new(default_plugins::json::JsonStringifyPlugin));
     #[cfg(feature = "plugin_json")]
     plugins.push(Box::new(default_plugins::json::JsonParsePlugin));
+    #[cfg(feature = "plugin_json")]
+    plugins.push(Box::new(default_plugins::json::JsonFormatPlugin));
+    #[cfg(feature = "plugin_json")]
+    plugins.push(Box::new(default_plugins::json::JsonMinifyPlugin));
 
     plugins
 }

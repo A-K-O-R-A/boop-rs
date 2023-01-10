@@ -72,13 +72,17 @@ fn main() -> Result<(), BoopError> {
 
             if let Some(plugin) = plugin {
                 if let Some(input) = input {
-                    for i in 0..input.len() {
-                        println!("Input {i}:");
-                        println!("{}", plugin.run(&input[i]));
+                    if input.len() > 1 {
+                        for i in 0..input.len() {
+                            println!("Input {}:", i + 1);
+                            println!("{}", plugin.run(&input[i]));
 
-                        if i != input.len() - 1 {
-                            print!("\n")
+                            if i != input.len() - 1 {
+                                print!("\n")
+                            }
                         }
+                    } else {
+                        println!("{}", plugin.run(&input[0]));
                     }
                 } else {
                     //let mut buffer = String::new();
