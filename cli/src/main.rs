@@ -1,6 +1,9 @@
 use clap::{Parser, Subcommand};
 use core::manager::PluginManager;
-use std::{io, path::PathBuf};
+use std::{
+    io::{self, BufReader, Read},
+    path::PathBuf,
+};
 
 #[derive(Parser)]
 #[command(author, version, about, long_about = None, trailing_var_arg=true)]
@@ -31,6 +34,7 @@ enum Commands {
 #[derive(Debug)]
 pub enum BoopError {
     PluginNotFound(String),
+    IoError(io::Error),
 }
 
 fn main() -> Result<(), BoopError> {
@@ -82,18 +86,18 @@ fn main() -> Result<(), BoopError> {
                             }
                         }
                     } else {
-                        println!("{}", plugin.run(&input[0]));
+                        print!("{}", plugin.run(&input[0]));
                     }
                 } else {
-                    //let mut buffer = String::new();
-                    let state = io::stdin()
-                        .lines()
-                        .map(|l| l.unwrap())
-                        .reduce(|acc, e| acc + &e)
-                        .unwrap_or("".into());
-                    //dbg!(&state);
+                    let mut reader = BufReader::new(io::stdin());
+                    let mut input_state = String::new();
 
-                    println!("{}", plugin.run(&state));
+                    let res = reader.read_to_string(&mut input_state);
+                    if res.is_err() {
+                        return Err(BoopError::IoError(res.unwrap_err()));
+                    }
+
+                    print!("{}", plugin.run(&input_state));
                 };
 
                 Ok(())
