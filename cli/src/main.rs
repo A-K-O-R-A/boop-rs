@@ -1,5 +1,5 @@
 use clap::{Parser, Subcommand};
-use core::plugin_manager::PluginManager;
+use core::manager::PluginManager;
 use std::{io, path::PathBuf};
 
 #[derive(Parser)]

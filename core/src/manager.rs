@@ -46,25 +46,30 @@ fn load_plugin_folder<P: AsRef<Path>>(path: P) -> io::Result<Vec<Box<dyn Plugin>
     let mut plugins = Vec::new();
 
     for entry in entries {
-        if let Ok(entry) = entry {
-            let entry_path = entry.path();
-            let entry_path = entry_path.to_str().unwrap();
+        let entry = entry?;
+        let entry_path = entry.path();
 
-            if let Ok(file_type) = entry.file_type() {
-                if file_type.is_dir() {
-                    let mut nested_plugins = load_plugin_folder(entry_path)?;
-                    plugins.append(&mut nested_plugins)
-                } else {
-                    if entry_path.to_ascii_lowercase().ends_with(".js") {
-                        plugins.push(Box::new(JsPlugin::from_path(entry_path)?));
-                    } else {
-                        println!("Unsupported plugin {}", entry_path);
+        let file_type = entry.file_type()?;
+        if file_type.is_dir() {
+            //Support recursion in plugins folder
+            let mut nested_plugins = load_plugin_folder(entry_path)?;
+            plugins.append(&mut nested_plugins)
+        } else {
+            match entry_path.extension() {
+                Some(extension) => {
+                    let extension = extension.to_str().unwrap().to_ascii_lowercase();
+                    match extension.as_str() {
+                        "js" => {
+                            plugins.push(Box::new(JsPlugin::from_path(entry_path)?));
+                        }
+                        _ => {
+                            println!("Unsupported plugin type {}, check for disabled features or refer to the documentation", extension);
+                        }
                     }
                 }
-
-                //println!("{:?}: {:?}", entry.path(), file_type);
-            } else {
-                println!("Couldn't get file type for {:?}", entry.path());
+                None => {
+                    println!("Unsupported file format {}", entry_path.display());
+                }
             }
         }
     }

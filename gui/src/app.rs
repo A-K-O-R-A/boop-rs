@@ -1,4 +1,4 @@
-use core::{plugin::Plugin, plugin_manager::PluginManager};
+use core::{manager::PluginManager, plugin::Plugin};
 use eframe::egui::{self, Layout, Modifiers, Window};
 use egui_extras::{Column, TableBuilder};
 

@@ -1,4 +1,4 @@
-use core::plugin_manager::PluginManager;
+use core::manager::PluginManager;
 use eframe::egui::{self, Layout, RichText, Ui};
 use egui_extras::{Column, TableBuilder};
 
