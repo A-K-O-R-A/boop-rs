@@ -2,4 +2,4 @@
 members = ["core", "gui", "cli"]
 
 
-#default-members = ["core", "gui"]
+default-members = ["core", "cli"]

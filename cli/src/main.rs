@@ -53,10 +53,10 @@ fn main() -> Result<(), BoopError> {
 
             for plugin in &manager.plugins {
                 println!(
-                    " ({}) {} ({} | {})",
+                    " ({} - {}) {} ({})",
                     plugin.plugin_type(),
-                    plugin.metadata().name,
                     plugin.metadata().id,
+                    plugin.metadata().name,
                     plugin.metadata().description
                 )
             }
