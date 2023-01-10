@@ -1,5 +1,8 @@
+#[allow(unused_imports)]
 use crate::default_plugins;
-use crate::loaders::js::JsPlugin;
+#[allow(unused_imports)]
+use crate::loaders;
+
 use crate::plugin::Plugin;
 use std::fs;
 use std::io;
@@ -10,18 +13,28 @@ pub struct PluginManager {
     pub plugins: Vec<Box<dyn Plugin>>,
 }
 
+fn default_plugins() -> Vec<Box<dyn Plugin>> {
+    #[allow(unused_mut)]
+    let mut plugins: Vec<Box<dyn Plugin>> = Vec::new();
+
+    #[cfg(feature = "plugin_base64")]
+    plugins.push(Box::new(default_plugins::base64::Base64DecodePlugin));
+    #[cfg(feature = "plugin_base64")]
+    plugins.push(Box::new(default_plugins::base64::Base64EncodePlugin));
+
+    #[cfg(feature = "plugin_json")]
+    plugins.push(Box::new(default_plugins::json::JsonStringifyPlugin));
+    #[cfg(feature = "plugin_json")]
+    plugins.push(Box::new(default_plugins::json::JsonParsePlugin));
+
+    plugins
+}
+
 impl Default for PluginManager {
     fn default() -> Self {
-        let mut plugins: Vec<Box<dyn Plugin>> = Vec::new();
-
-        cfg_if::cfg_if! {
-            if #[cfg(feature = "default_plugins")] {
-                plugins.push(Box::new(default_plugins::base64::Base64DecodePlugin));
-                plugins.push(Box::new(default_plugins::base64::Base64EncodePlugin));
-            }
+        Self {
+            plugins: default_plugins(),
         }
-
-        Self { plugins }
     }
 }
 
@@ -29,12 +42,7 @@ impl PluginManager {
     pub fn load_plugin_folder<P: AsRef<Path>>(path: P) -> io::Result<Self> {
         let mut plugins = load_plugin_folder(path)?;
 
-        cfg_if::cfg_if! {
-            if #[cfg(feature = "default_plugins")] {
-                plugins.push(Box::new(default_plugins::base64::Base64DecodePlugin));
-                plugins.push(Box::new(default_plugins::base64::Base64EncodePlugin));
-            }
-        }
+        plugins.append(&mut default_plugins());
 
         Ok(Self { plugins })
     }
@@ -60,7 +68,8 @@ fn load_plugin_folder<P: AsRef<Path>>(path: P) -> io::Result<Vec<Box<dyn Plugin>
                     let extension = extension.to_str().unwrap().to_ascii_lowercase();
                     match extension.as_str() {
                         "js" => {
-                            plugins.push(Box::new(JsPlugin::from_path(entry_path)?));
+                            #[cfg(feature = "loader_js")]
+                            plugins.push(Box::new(loaders::js::JsPlugin::from_path(entry_path)?));
                         }
                         _ => {
                             println!("Unsupported plugin type {}, check for disabled features or refer to the documentation", extension);

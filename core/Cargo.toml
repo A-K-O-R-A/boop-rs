@@ -8,13 +8,15 @@ edition = "2021"
 [features]
 default = ["default_plugins", "default_loaders"]
 
-default_plugins = ["plugin_base64"]
+default_plugins = ["plugin_base64", "plugin_json"]
 plugin_base64 = ["dep:base64"]
+plugin_json = ["dep:json"]
 
-default_loaders = ["js_loader"]
-js_loader = ["dep:boa_engine"]
+default_loaders = ["loader_js"]
+loader_js = ["dep:boa_engine"]
 
 [dependencies]
 cfg-if = "1.0.0"
 boa_engine = { version = "0.16.0", optional = true }
 base64 = { version = "0.20.0", optional = true }
+json = { version = "0.12.4", optional = true }

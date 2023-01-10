@@ -1,6 +1,5 @@
-#[cfg(feature = "default_plugins")]
 mod default_plugins;
+mod loaders;
 
-pub mod loaders;
 pub mod manager;
 pub mod plugin;

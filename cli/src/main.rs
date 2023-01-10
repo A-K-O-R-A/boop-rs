@@ -21,7 +21,7 @@ enum Commands {
 
         /// Stuff to add
         #[arg(required = false)]
-        input: Option<String>,
+        input: Option<Vec<String>>,
     },
 
     /// List the currently loaded plugins
@@ -71,8 +71,15 @@ fn main() -> Result<(), BoopError> {
                 .find(|p| p.metadata().id == *command || p.metadata().name == *command);
 
             if let Some(plugin) = plugin {
-                let state = if let Some(input) = input {
-                    input.clone()
+                if let Some(input) = input {
+                    for i in 0..input.len() {
+                        println!("Input {i}:");
+                        println!("{}", plugin.run(&input[i]));
+
+                        if i != input.len() - 1 {
+                            print!("\n")
+                        }
+                    }
                 } else {
                     //let mut buffer = String::new();
                     let state = io::stdin()
@@ -81,10 +88,10 @@ fn main() -> Result<(), BoopError> {
                         .reduce(|acc, e| acc + &e)
                         .unwrap_or("".into());
                     //dbg!(&state);
-                    state
+
+                    println!("{}", plugin.run(&state));
                 };
 
-                println!("{}", plugin.run(&state));
                 Ok(())
             } else {
                 //panic!("Unable to find plugin with id or name \"{}\"", command);
