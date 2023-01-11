@@ -31,6 +31,18 @@ fn default_plugins() -> Vec<Box<dyn Plugin>> {
     #[cfg(feature = "plugin_json")]
     plugins.push(Box::new(default_plugins::json::JsonMinifyPlugin));
 
+    #[cfg(feature = "plugin_jwt")]
+    plugins.push(Box::new(default_plugins::jwt::JwtDecodePlugin));
+    #[cfg(feature = "plugin_jwt")]
+    plugins.push(Box::new(default_plugins::jwt::JwtFormatPlugin));
+
+    plugins.push(Box::new(default_plugins::text::TextLowercasePlugin));
+    plugins.push(Box::new(default_plugins::text::TextUppercasePlugin));
+    plugins.push(Box::new(default_plugins::text::TextReversePlugin));
+    plugins.push(Box::new(default_plugins::text::TextRemoveNewlinesPlugin));
+    plugins.push(Box::new(default_plugins::text::TextCountCharactersPlugin));
+    plugins.push(Box::new(default_plugins::text::TextCountLinesPlugin));
+
     plugins
 }
 

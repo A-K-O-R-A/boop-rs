@@ -8,9 +8,10 @@ edition = "2021"
 [features]
 default = ["default_plugins", "default_loaders"]
 
-default_plugins = ["plugin_base64", "plugin_json"]
+default_plugins = ["plugin_base64", "plugin_json", "plugin_jwt"]
 plugin_base64 = ["dep:base64"]
 plugin_json = ["dep:json"]
+plugin_jwt = ["dep:base64", "dep:json"]
 
 default_loaders = ["loader_js"]
 loader_js = ["dep:boa_engine"]

@@ -56,10 +56,12 @@ fn main() -> Result<(), BoopError> {
             print!("\n");
 
             for plugin in &manager.plugins {
+                let id_column = format!(" ({}) {}", plugin.plugin_type(), plugin.metadata().id);
+                let spacing: String = vec![' '; 30 - id_column.len()].iter().collect();
+
                 println!(
-                    " ({} - {}) {} ({})",
-                    plugin.plugin_type(),
-                    plugin.metadata().id,
+                    "{}{spacing}  {} ({})",
+                    id_column,
                     plugin.metadata().name,
                     plugin.metadata().description
                 )
