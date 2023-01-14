@@ -36,6 +36,14 @@ fn default_plugins() -> Vec<Box<dyn Plugin>> {
     #[cfg(feature = "plugin_jwt")]
     plugins.push(Box::new(default_plugins::jwt::JwtFormatPlugin));
 
+    #[cfg(feature = "plugin_md5")]
+    plugins.push(Box::new(default_plugins::md5::Md5HashPlugin));
+
+    #[cfg(feature = "plugin_url")]
+    plugins.push(Box::new(default_plugins::url::UrlDecodePlugin));
+    #[cfg(feature = "plugin_url")]
+    plugins.push(Box::new(default_plugins::url::UrlEncodePlugin));
+
     plugins.push(Box::new(default_plugins::text::TextLowercasePlugin));
     plugins.push(Box::new(default_plugins::text::TextUppercasePlugin));
     plugins.push(Box::new(default_plugins::text::TextReversePlugin));

@@ -1,7 +1,13 @@
 What is this?
 
-to identify highlighting
+[ ] to identify highlighting
 
-URL Decode
-reverse
-HTML Decode
+[x] URL Decode
+[x] reverse--
+[ ] HTML Decode
+[ ] Hashes
+[ ] timestamp
+[ ] units?
+
+
+https://github.com/IvanMathy/Boop/tree/main/Scripts

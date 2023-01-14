@@ -8,10 +8,19 @@ edition = "2021"
 [features]
 default = ["default_plugins", "default_loaders"]
 
-default_plugins = ["plugin_base64", "plugin_json", "plugin_jwt"]
+default_plugins = [
+    "plugin_base64",
+    "plugin_json",
+    "plugin_jwt",
+    "plugin_url",
+    "plugin_md5",
+]
+
 plugin_base64 = ["dep:base64"]
 plugin_json = ["dep:json"]
 plugin_jwt = ["dep:base64", "dep:json"]
+plugin_url = ["dep:urlencoding"]
+plugin_md5 = ["dep:md5"]
 
 default_loaders = ["loader_js"]
 loader_js = ["dep:boa_engine"]
@@ -21,3 +30,5 @@ cfg-if = "1.0.0"
 boa_engine = { version = "0.16.0", optional = true }
 base64 = { version = "0.20.0", optional = true }
 json = { version = "0.12.4", optional = true }
+urlencoding = { version = "2.1.2", optional = true }
+md5 = { version = "0.7.0", optional = true }

@@ -46,7 +46,7 @@ impl Plugin for Base64EncodePlugin {
             id: "base64.encode".to_owned(),
             name: "Base64 Encode".to_owned(),
             description: "This encodes a string to base64".to_owned(),
-            input_type: "test".to_owned(),
+            input_type: "text".to_owned(),
             output_type: "base64".to_owned(),
         }
     }
