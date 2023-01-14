@@ -5,7 +5,7 @@ What is this?
 [x] URL Decode
 [x] reverse--
 [ ] HTML Decode
-[ ] Hashes
+[x] Hashes
 [ ] timestamp
 [ ] units?
 

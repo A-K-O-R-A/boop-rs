@@ -1,0 +1,20 @@
+{
+  "version": 0,
+  "root_name": "Workspace",
+  "workspace_crates": {
+    "core": {
+      "full_path": "/home/akora/dev/rust/boop-rs/core/Cargo.toml",
+      "dependencies": {
+        "md5": {
+          "original_features": [
+            "std"
+          ],
+          "successfully_removed_features": [
+            "std"
+          ],
+          "unsuccessfully_removed_features": []
+        }
+      }
+    }
+  }
+}

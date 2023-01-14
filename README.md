@@ -41,3 +41,8 @@ The original Boop App is focused on the GUI so originally I wanted to recreate t
 
 ## Installation
 Right now this project is not published anywhere so you'll need to clone this repository and build it yourself for now. More default plugins will be added and the CLI will receive a bit of polish before it's first proper release.
+
+If you just want to try out the project you can do so using the `cargo install` command.
+```bash
+cargo install --git https://github.com/A-K-O-R-A/boop-rs/ boop
+```
