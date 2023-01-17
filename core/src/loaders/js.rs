@@ -1,12 +1,13 @@
 use crate::plugin::{Plugin, PluginMetadata};
-use boa_engine::{prelude::*, property::Attribute};
+use quick_js::{Context, ExecutionError, JsValue};
+use std::collections::HashMap;
 use std::fs;
 use std::io;
 
 #[derive(Debug)]
 pub struct JsPlugin {
     pub metadata: PluginMetadata,
-    context: Option<Context>,
+    //context: Option<Context>,
     script: String,
 }
 
@@ -16,17 +17,29 @@ impl Plugin for JsPlugin {
     }
 
     fn run(&self, state: &str) -> String {
-        let mut context =
-            JsPlugin::create_context(&self.script).expect("Unable to create JS Context");
-        context.register_global_property("state", state, Attribute::all());
+        let context = JsPlugin::create_context(&self.script).expect("Unable to create JS Context");
 
-        let value = context.eval("run(state)").expect("Unable to run JS Plugin");
-        let new_state = value
-            .to_string(&mut context)
-            .expect("Unable to read plugin output")
-            .to_string();
+        let value = context.call_function("run", vec![state]).expect(
+            format!(
+                "Unable to call run function of JS plugin {}",
+                self.metadata.id
+            )
+            .as_str(),
+        );
 
-        new_state
+        match value {
+            JsValue::String(new_state) => new_state,
+            _ => match value.into_string() {
+                Some(new_state) => new_state,
+                None => {
+                    println!(
+                        "Unable to convert output of plugin {} to string",
+                        self.metadata.id
+                    );
+                    state.to_owned()
+                }
+            },
+        }
     }
 
     fn plugin_type(&self) -> String {
@@ -35,25 +48,14 @@ impl Plugin for JsPlugin {
 }
 
 impl JsPlugin {
-    #[allow(dead_code)]
-    pub fn run_warm(&mut self, state: &str) -> JsResult<String> {
-        let context = self.context.as_mut().unwrap();
-        context.register_global_property("state", state, Attribute::all());
-
-        let value = context.eval("run(state)")?;
-        let new_state = value.to_string(context)?.to_string();
-
-        Ok(new_state)
-    }
-
-    fn create_context<S>(script: S) -> JsResult<Context>
+    fn create_context<S>(script: S) -> Result<Context, ExecutionError>
     where
-        S: AsRef<[u8]>,
+        S: AsRef<str>,
     {
-        let mut context = Context::default();
+        let context = Context::new().unwrap();
 
         // Populate the script definition to the context.
-        context.eval(script)?;
+        context.eval(script.as_ref())?;
 
         Ok(context)
     }
@@ -69,42 +71,34 @@ impl JsPlugin {
 
         Ok(Self {
             metadata,
-            context: None, // Some(context)
+            // context: None, // Some(context)
             script,
         })
     }
 }
 
 impl PluginMetadata {
-    pub fn from_js_context(context: &mut Context) -> JsResult<Self> {
-        let value = context.eval("metadata()")?;
-        let obj = value.as_object().ok_or(0)?;
+    pub fn from_js_context(context: &mut Context) -> Result<Self, ExecutionError> {
+        let obj = context.eval_as::<HashMap<String, String>>("metadata()")?;
 
-        let id = obj
-            .get("id", context)?
-            .as_string()
-            .expect("Plugin id is needed")
-            .to_string();
-        let name = obj
-            .get("name", context)?
-            .as_string()
-            .expect("Plugin name is needed")
-            .to_string();
+        let id = obj.get("id").expect("Plugin id is needed").to_owned();
+
+        let name = obj.get("name").expect("Plugin name is needed").to_owned();
+
         let description = obj
-            .get("description", context)?
-            .as_string()
+            .get("description")
             .expect("Plugin description is needed")
-            .to_string();
+            .to_owned();
+
         let input_type = obj
-            .get("inputType", context)?
-            .as_string()
-            .expect("Plugin inputType is needed")
-            .to_string();
+            .get("inputType")
+            .expect("Plugin name is needed")
+            .to_owned();
+
         let output_type = obj
-            .get("outputType", context)?
-            .as_string()
-            .expect("Plugin outputType is needed")
-            .to_string();
+            .get("outputType")
+            .expect("Plugin id is needed")
+            .to_owned();
 
         Ok(Self {
             id,
