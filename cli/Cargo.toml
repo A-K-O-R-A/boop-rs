@@ -8,3 +8,4 @@ edition = "2021"
 [dependencies]
 core = { path = "../core", default_features = true }
 clap = { version = "4.0.32", features = ["derive"] }
+colored = "2.0.0"
