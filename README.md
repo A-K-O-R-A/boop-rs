@@ -35,7 +35,7 @@ Hello World!
 ```
 
 ## Installation
-Right now this project is not published anywhere so you'll need to clone this repository and build it yourself for now. More default plugins will be added and the CLI will receive a bit of polish before there will be proper release.
+Right now this project is not published anywhere so you'll need to clone this repository and build it yourself for now. The first official release date is not yet set.
 
 If you just want to try out the project you can do so using the `cargo install` command.
 ```bash

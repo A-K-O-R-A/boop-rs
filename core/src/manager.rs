@@ -7,6 +7,7 @@ use crate::plugin::Plugin;
 use std::fs;
 use std::io;
 use std::path::Path;
+use std::path::PathBuf;
 
 #[derive(Debug)]
 pub struct PluginManager {
@@ -70,6 +71,15 @@ impl PluginManager {
         plugins.sort();
 
         Ok(Self { plugins })
+    }
+
+    pub fn new(plugins_folder: &Option<PathBuf>) -> PluginManager {
+        if let Some(plugins_path) = plugins_folder {
+            PluginManager::load_plugin_folder(&plugins_path)
+                .expect(format!("Unable to load plugins from {:?}", &plugins_path).as_str())
+        } else {
+            PluginManager::default()
+        }
     }
 }
 
