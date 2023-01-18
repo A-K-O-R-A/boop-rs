@@ -67,6 +67,7 @@ impl PluginManager {
         let mut plugins = load_plugin_folder(path)?;
 
         plugins.append(&mut default_plugins());
+        plugins.sort();
 
         Ok(Self { plugins })
     }

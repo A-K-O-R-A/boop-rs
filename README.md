@@ -27,6 +27,13 @@ $ boop run base64.decode "SGVsbG8gV29ybGQh"
 Hello World!
 ```
 
+If you want to load your own plugins you can do so by providing the `plugins-folder` option like `-p, --plugins-folder <PLUGINS_FOLDER>` which will automatically recursively load all all plugins in that folder.
+
+```bash
+$ boop run -p "./plugins" general.remove_newlines $'\nHello,\n World!'
+Hello World!
+```
+
 ## Installation
 Right now this project is not published anywhere so you'll need to clone this repository and build it yourself for now. More default plugins will be added and the CLI will receive a bit of polish before there will be proper release.
 
@@ -35,14 +42,14 @@ If you just want to try out the project you can do so using the `cargo install` 
 cargo install --git https://github.com/A-K-O-R-A/boop-rs/ boop
 ```
 
+The programm is shipped with some default plugins embedded into the executable and a loader for js plugins.
+
 ## Plugins
 By default a few plugins directly embedded into the application are provided and always available but there is also an option to use external plugins. Right now only external plugins in javascript are supported. You can easily write your own plugins by just copying one of the examples in the `plugins` folder and changing the two functions.
 
 The plugin just needs to export two functions `metadata(): Metadata` and `run(state: string): string` and are loaded at runtime, so it it is very similiar to the plugins used by the original boop app.
 
-If you want to use your own plugins just provide the `plugins-folder` option like `-p, --plugins-folder <PLUGINS_FOLDER>`.
-
-Other loaders than the javascript one (provided by the [`boa-engine`](https://github.com/boa-dev/boa)) might be added in the future(for example `lua`) but are currently out of scope for this project.
+Other loaders than the javascript one (provided by the [`quick-js`](https://github.com/theduke/quickjs-rs) crate) might be added in the future(for example `lua`) but are currently out of scope for this project.
 
 ## GUI 
 The original Boop App has a GUI instead of CLI so originally I wanted to recreate that, unfortunatly writing a GUI application in rust without any prior knowledge turned out to be harder than I thought. So for now this project is manly focused on the CLI part.
