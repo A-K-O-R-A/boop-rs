@@ -7,13 +7,8 @@ where
     fn metadata(&self) -> PluginMetadata;
     fn plugin_type(&self) -> String;
     fn run(&self, state: &str) -> String;
-
-    /*
-    fn from_path<P: AsRef<std::path::Path>>(path: P) -> io::Result<Self>
-    where
-        Self: Sized;
-     */
 }
+
 impl PartialEq for dyn Plugin {
     fn eq(&self, other: &Self) -> bool {
         self.metadata().id == other.metadata().id

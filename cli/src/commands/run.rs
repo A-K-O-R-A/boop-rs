@@ -18,10 +18,7 @@ pub fn run(
         PluginManager::default()
     };
 
-    let plugin = manager
-        .plugins
-        .iter()
-        .find(|p| p.metadata().id == *command || p.metadata().name == *command);
+    let plugin = manager.find_plugin(command);
 
     if let Some(plugin) = plugin {
         if let Some(input) = inputs {
