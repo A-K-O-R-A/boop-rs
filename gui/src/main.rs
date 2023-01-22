@@ -10,7 +10,7 @@ pub const SEARCH_SIZE: egui::Vec2 = egui::vec2(200.0, 150.0);
 
 fn main() {
     let plugin_manager =
-        PluginManager::load_plugin_folder("./plugins").expect("Unable to load plugin folder");
+        PluginManager::from_path("./plugins").expect("Unable to load plugin folder");
 
     let options = eframe::NativeOptions {
         initial_window_size: Some(WINDOW_SIZE),

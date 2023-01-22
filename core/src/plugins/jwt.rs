@@ -124,8 +124,8 @@ impl Plugin for JwtFormatPlugin {
             return state.into();
         };
 
-        let header = crate::default_plugins::json::JsonFormatPlugin.run(&header);
-        let body = crate::default_plugins::json::JsonFormatPlugin.run(&body);
+        let header = crate::plugins::json::JsonFormatPlugin.run(&header);
+        let body = crate::plugins::json::JsonFormatPlugin.run(&body);
 
         (header + "." + &body + "." + jwt_parts[2]).into()
     }

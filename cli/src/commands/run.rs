@@ -12,7 +12,11 @@ pub fn run(
     inputs: &Option<Vec<String>>,
     command: &String,
 ) -> Result<(), BoopError> {
-    let manager = PluginManager::new(plugins_folder);
+    let manager = if let Some(path) = plugins_folder {
+        PluginManager::from_path(path).map_err(|e| BoopError::IoError(e))?
+    } else {
+        PluginManager::default()
+    };
 
     let plugin = manager
         .plugins

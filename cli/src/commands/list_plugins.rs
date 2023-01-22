@@ -7,7 +7,11 @@ use std::{collections::HashSet, path::PathBuf};
 use crate::BoopError;
 
 pub fn list_plugins(plugins_folder: &Option<PathBuf>) -> Result<(), BoopError> {
-    let manager = PluginManager::new(plugins_folder);
+    let manager = if let Some(path) = plugins_folder {
+        PluginManager::from_path(path).map_err(|e| BoopError::IoError(e))?
+    } else {
+        PluginManager::default()
+    };
 
     print!("{}", "Currently loaded plugins:".bold());
     if let Some(plugins_path) = plugins_folder {
