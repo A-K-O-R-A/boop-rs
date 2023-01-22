@@ -107,12 +107,12 @@ fn load_plugin_folder<P: AsRef<Path>>(path: P) -> io::Result<Vec<Box<dyn Plugin>
                             plugins.push(Box::new(loaders::js::JsPlugin::from_path(entry_path)?));
                         }
                         _ => {
-                            println!("Unsupported plugin type {}, check for disabled features or refer to the documentation", extension);
+                            eprintln!("Unsupported plugin type {}, check for disabled features or refer to the documentation", extension);
                         }
                     }
                 }
                 None => {
-                    println!("Unsupported file format {}", entry_path.display());
+                    eprintln!("Unsupported file format {}", entry_path.display());
                 }
             }
         }

@@ -21,12 +21,12 @@ impl Plugin for Base64DecodePlugin {
             Ok(decoded_bytes) => match String::from_utf8(decoded_bytes) {
                 Ok(new_state) => new_state,
                 Err(e) => {
-                    println!("{e}");
+                    eprintln!("{e}");
                     state.to_owned()
                 }
             },
             Err(e) => {
-                println!("{e}");
+                eprintln!("{e}");
                 state.to_owned()
             }
         }

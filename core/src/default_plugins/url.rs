@@ -20,7 +20,7 @@ impl Plugin for UrlDecodePlugin {
         match decode(state) {
             Ok(new_state) => new_state.into(),
             Err(e) => {
-                println!("{e}");
+                eprintln!("{e}");
                 state.to_owned()
             }
         }

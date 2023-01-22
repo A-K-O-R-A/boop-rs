@@ -108,7 +108,7 @@ impl Plugin for JsonMinifyPlugin {
         match json::parse(state) {
             Ok(json_value) => json::stringify(json_value),
             Err(e) => {
-                println!("{e:?}");
+                eprintln!("{e:?}");
                 state.into()
             }
         }

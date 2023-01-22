@@ -37,12 +37,12 @@ impl Plugin for JwtDecodePlugin {
             Ok(decoded_bytes) => match String::from_utf8(decoded_bytes) {
                 Ok(new_state) => Some(new_state),
                 Err(e) => {
-                    println!("{e}");
+                    eprintln!("{e}");
                     None
                 }
             },
             Err(e) => {
-                println!("{e}");
+                eprintln!("{e}");
                 None
             }
         }) else {
@@ -53,12 +53,12 @@ impl Plugin for JwtDecodePlugin {
             Ok(decoded_bytes) => match String::from_utf8(decoded_bytes) {
                 Ok(new_state) => Some(new_state),
                 Err(e) => {
-                    println!("{e}");
+                    eprintln!("{e}");
                     None
                 }
             },
             Err(e) => {
-                println!("{e}");
+                eprintln!("{e}");
                 None
             }
         }) else {
@@ -96,12 +96,12 @@ impl Plugin for JwtFormatPlugin {
             Ok(decoded_bytes) => match String::from_utf8(decoded_bytes) {
                 Ok(new_state) => Some(new_state),
                 Err(e) => {
-                    println!("{e}");
+                    eprintln!("{e}");
                     None
                 }
             },
             Err(e) => {
-                println!("{e}");
+                eprintln!("{e}");
                 None
             }
         }) else {
@@ -112,12 +112,12 @@ impl Plugin for JwtFormatPlugin {
             Ok(decoded_bytes) => match String::from_utf8(decoded_bytes) {
                 Ok(new_state) => Some(new_state),
                 Err(e) => {
-                    println!("{e}");
+                    eprintln!("{e}");
                     None
                 }
             },
             Err(e) => {
-                println!("{e}");
+                eprintln!("{e}");
                 None
             }
         }) else {

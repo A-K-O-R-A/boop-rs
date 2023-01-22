@@ -32,7 +32,7 @@ impl Plugin for JsPlugin {
             _ => match value.into_string() {
                 Some(new_state) => new_state,
                 None => {
-                    println!(
+                    eprintln!(
                         "Unable to convert output of plugin {} to string",
                         self.metadata.id
                     );
