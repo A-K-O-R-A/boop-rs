@@ -1,4 +1,4 @@
-use crate::plugin::{Plugin, PluginMetadata};
+use crate::plugin::{Plugin, PluginMetadata, PluginResult};
 
 #[derive(Debug)]
 pub struct TextReversePlugin;
@@ -17,8 +17,8 @@ impl Plugin for TextReversePlugin {
         }
     }
 
-    fn run(&self, state: &str) -> String {
-        state.chars().rev().collect()
+    fn run(&self, state: &str) -> PluginResult {
+        Ok(state.chars().rev().collect())
     }
 
     fn plugin_type(&self) -> String {
@@ -43,8 +43,8 @@ impl Plugin for TextLowercasePlugin {
         }
     }
 
-    fn run(&self, state: &str) -> String {
-        state.to_lowercase()
+    fn run(&self, state: &str) -> PluginResult {
+        Ok(state.to_lowercase())
     }
 
     fn plugin_type(&self) -> String {
@@ -69,8 +69,8 @@ impl Plugin for TextUppercasePlugin {
         }
     }
 
-    fn run(&self, state: &str) -> String {
-        state.to_uppercase()
+    fn run(&self, state: &str) -> PluginResult {
+        Ok(state.to_uppercase())
     }
 
     fn plugin_type(&self) -> String {
@@ -98,8 +98,8 @@ impl Plugin for TextRemoveNewlinesPlugin {
         }
     }
 
-    fn run(&self, state: &str) -> String {
-        state.chars().filter(|c| *c != '\n').collect()
+    fn run(&self, state: &str) -> PluginResult {
+        Ok(state.chars().filter(|c| *c != '\n').collect())
     }
 
     fn plugin_type(&self) -> String {
@@ -127,8 +127,8 @@ impl Plugin for TextCountCharactersPlugin {
         }
     }
 
-    fn run(&self, state: &str) -> String {
-        state.chars().count().to_string()
+    fn run(&self, state: &str) -> PluginResult {
+        Ok(state.chars().count().to_string())
     }
 
     fn plugin_type(&self) -> String {
@@ -156,8 +156,8 @@ impl Plugin for TextCountLinesPlugin {
         }
     }
 
-    fn run(&self, state: &str) -> String {
-        state.lines().count().to_string()
+    fn run(&self, state: &str) -> PluginResult {
+        Ok(state.lines().count().to_string())
     }
 
     fn plugin_type(&self) -> String {

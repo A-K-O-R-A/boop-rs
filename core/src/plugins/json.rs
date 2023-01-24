@@ -1,4 +1,4 @@
-use crate::plugin::{Plugin, PluginMetadata};
+use crate::plugin::{Plugin, PluginMetadata, PluginResult};
 
 #[derive(Debug)]
 pub struct JsonStringifyPlugin;
@@ -20,10 +20,10 @@ impl Plugin for JsonStringifyPlugin {
         }
     }
 
-    fn run(&self, state: &str) -> String {
+    fn run(&self, state: &str) -> PluginResult {
         match json::parse(state) {
-            Ok(json_value) => json::stringify(json::stringify(json_value)),
-            Err(_e) => json::stringify(state),
+            Ok(json_value) => Ok(json::stringify(json::stringify(json_value))),
+            Err(e) => Err(e.to_string()),
         }
     }
 
@@ -52,19 +52,16 @@ impl Plugin for JsonParsePlugin {
         }
     }
 
-    fn run(&self, state: &str) -> String {
+    fn run(&self, state: &str) -> PluginResult {
         match json::parse(state) {
             Ok(stringified_json_value) => {
                 if let Some(json_value) = stringified_json_value.as_str() {
-                    json_value.into()
+                    Ok(json_value.into())
                 } else {
-                    state.into()
+                    Err("Unable to convert JSON back to string".to_string())
                 }
             }
-            Err(e) => {
-                println!("{e:?}");
-                state.into()
-            }
+            Err(e) => Err(e.to_string()),
         }
     }
 
@@ -93,13 +90,10 @@ impl Plugin for JsonFormatPlugin {
         }
     }
 
-    fn run(&self, state: &str) -> String {
+    fn run(&self, state: &str) -> PluginResult {
         match json::parse(state) {
-            Ok(json_value) => json::stringify_pretty(json_value, 2),
-            Err(e) => {
-                println!("{e:?}");
-                state.into()
-            }
+            Ok(json_value) => Ok(json::stringify_pretty(json_value, 2)),
+            Err(e) => Err(e.to_string()),
         }
     }
 
@@ -128,13 +122,10 @@ impl Plugin for JsonMinifyPlugin {
         }
     }
 
-    fn run(&self, state: &str) -> String {
+    fn run(&self, state: &str) -> PluginResult {
         match json::parse(state) {
-            Ok(json_value) => json::stringify(json_value),
-            Err(e) => {
-                eprintln!("{e:?}");
-                state.into()
-            }
+            Ok(json_value) => Ok(json::stringify(json_value)),
+            Err(e) => Err(e.to_string()),
         }
     }
 

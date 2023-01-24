@@ -1,4 +1,4 @@
-use core::manager::PluginManager;
+use core::{manager::PluginManager, plugin::Plugin};
 use std::{
     io::{self, BufReader, Read, Write},
     path::PathBuf,
@@ -25,16 +25,15 @@ pub fn run(
             if input.len() > 1 {
                 for i in 0..input.len() {
                     println!("Input {}:", i + 1);
-                    println!("{}", plugin.run(&input[i]));
+                    println!("{}", run_plugin(plugin, &input[i])?);
 
                     if i != input.len() - 1 {
                         print!("\n")
                     }
                 }
             } else {
-                print!("{}", plugin.run(&input[0]));
+                print!("{}", run_plugin(plugin, &input[0])?);
             }
-            io::stdout().flush().unwrap();
         } else {
             let mut reader = BufReader::new(io::stdin());
             let mut input_state = String::new();
@@ -44,13 +43,21 @@ pub fn run(
                 return Err(BoopError::IoError(res.unwrap_err()));
             }
 
-            print!("{}", plugin.run(&input_state));
-            io::stdout().flush().unwrap();
+            print!("{}", run_plugin(plugin, &input_state)?);
         };
+
+        io::stdout().flush().map_err(|e| BoopError::IoError(e))?;
 
         Ok(())
     } else {
         //panic!("Unable to find plugin with id or name \"{}\"", command);
         Err(BoopError::PluginNotFound(command.clone()))
     }
+}
+
+fn run_plugin(p: &Box<dyn Plugin>, input: &str) -> Result<String, BoopError> {
+    p.run(input).map_err(|e| BoopError::PluginError {
+        plugin_id: p.metadata().id,
+        error: e,
+    })
 }

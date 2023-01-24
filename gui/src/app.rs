@@ -28,8 +28,9 @@ impl eframe::App for BoopRs {
             if input.consume_shortcut(&shortcut) {
                 self.palette_open = !self.palette_open; //Open command palette
             } else if input.consume_key(Modifiers::NONE, egui::Key::Enter) {
-                self.code_editor.code =
-                    self.plugin_manager.plugins[self.selected_index].run(&self.code_editor.code);
+                self.code_editor.code = self.plugin_manager.plugins[self.selected_index]
+                    .run(&self.code_editor.code)
+                    .unwrap(); // !TODO Error handling
                 self.palette_open = false;
             } else if input.consume_key(Modifiers::NONE, egui::Key::ArrowDown) {
                 if self.selected_index < self.plugin_manager.plugins.len() - 1 {

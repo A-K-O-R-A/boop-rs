@@ -1,3 +1,4 @@
+use crate::plugin::PluginResult;
 use crate::plugin::{Plugin, PluginMetadata};
 use quick_js::{Context, ExecutionError, JsValue};
 use std::fs;
@@ -14,29 +15,24 @@ impl Plugin for JsPlugin {
         self.metadata.clone()
     }
 
-    fn run(&self, state: &str) -> String {
+    fn run(&self, state: &str) -> PluginResult {
         let context = JsPlugin::create_context(&self.script).expect("Unable to create JS Context");
 
-        let value = context.call_function("run", vec![state]).expect(
-            format!(
-                "Unable to call run function of JS plugin {}",
-                self.metadata.id
-            )
-            .as_str(),
-        );
+        let result = context.call_function("run", vec![state]);
 
-        match value {
-            JsValue::String(new_state) => new_state,
-            _ => match value.into_string() {
-                Some(new_state) => new_state,
-                None => {
-                    eprintln!(
-                        "Unable to convert output of plugin {} to string",
-                        self.metadata.id
-                    );
-                    state.to_owned()
-                }
+        match result {
+            Ok(value) => match value {
+                JsValue::String(new_state) => Ok(new_state),
+                _ => Err(format!(
+                    "Plugin {} returned value taht is not a string",
+                    self.metadata.id
+                )),
             },
+            Err(e) => Err(format!(
+                "Plugin {} threw JS runtime error: {}",
+                self.metadata.id,
+                e.to_string()
+            )),
         }
     }
 

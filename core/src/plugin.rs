@@ -9,7 +9,7 @@ where
 {
     fn metadata(&self) -> PluginMetadata;
     fn plugin_type(&self) -> String;
-    fn run(&self, state: &str) -> String;
+    fn run(&self, state: &str) -> PluginResult;
 }
 
 #[derive(Debug, Clone)]

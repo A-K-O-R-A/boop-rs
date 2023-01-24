@@ -1,6 +1,6 @@
 use base64::decode;
 
-use crate::plugin::{Plugin, PluginMetadata};
+use crate::plugin::{Plugin, PluginMetadata, PluginResult};
 
 #[derive(Debug)]
 pub struct JwtDecodePlugin;
@@ -34,44 +34,28 @@ impl Plugin for JwtDecodePlugin {
         }
     }
 
-    fn run(&self, state: &str) -> String {
+    fn run(&self, state: &str) -> PluginResult {
         let jwt_parts: Vec<&str> = state.split(".").collect();
         let header = pad_base64(jwt_parts[0]);
         let body = pad_base64(jwt_parts[1]);
 
-        let Some(header)  = (match decode(header) {
+        let header = match decode(header) {
             Ok(decoded_bytes) => match String::from_utf8(decoded_bytes) {
-                Ok(new_state) => Some(new_state),
-                Err(e) => {
-                    eprintln!("{e}");
-                    None
-                }
+                Ok(decoded_header) => decoded_header,
+                Err(e) => return Err(e.to_string()),
             },
-            Err(e) => {
-                eprintln!("{e}");
-                None
-            }
-        }) else {
-            return state.into();
+            Err(e) => return Err(e.to_string()),
         };
 
-        let Some(body) = (match decode(body) {
+        let body = match decode(body) {
             Ok(decoded_bytes) => match String::from_utf8(decoded_bytes) {
-                Ok(new_state) => Some(new_state),
-                Err(e) => {
-                    eprintln!("{e}");
-                    None
-                }
+                Ok(decoded_header) => decoded_header,
+                Err(e) => return Err(e.to_string()),
             },
-            Err(e) => {
-                eprintln!("{e}");
-                None
-            }
-        }) else {
-            return state.into();
+            Err(e) => return Err(e.to_string()),
         };
 
-        (header + "." + &body + "." + jwt_parts[2]).into()
+        Ok((header + "." + &body + "." + jwt_parts[2]).into())
     }
 
     fn plugin_type(&self) -> String {
@@ -99,47 +83,31 @@ impl Plugin for JwtFormatPlugin {
         }
     }
 
-    fn run(&self, state: &str) -> String {
+    fn run(&self, state: &str) -> PluginResult {
         let jwt_parts: Vec<&str> = state.split(".").collect();
         let header = pad_base64(jwt_parts[0]);
         let body = pad_base64(jwt_parts[1]);
 
-        let Some(header)  = (match decode(header) {
+        let header = match decode(header) {
             Ok(decoded_bytes) => match String::from_utf8(decoded_bytes) {
-                Ok(new_state) => Some(new_state),
-                Err(e) => {
-                    eprintln!("{e}");
-                    None
-                }
+                Ok(decoded_header) => decoded_header,
+                Err(e) => return Err(e.to_string()),
             },
-            Err(e) => {
-                eprintln!("{e}");
-                None
-            }
-        }) else {
-            return state.into();
+            Err(e) => return Err(e.to_string()),
         };
 
-        let Some(body) = (match decode(body) {
+        let body = match decode(body) {
             Ok(decoded_bytes) => match String::from_utf8(decoded_bytes) {
-                Ok(new_state) => Some(new_state),
-                Err(e) => {
-                    eprintln!("{e}");
-                    None
-                }
+                Ok(decoded_header) => decoded_header,
+                Err(e) => return Err(e.to_string()),
             },
-            Err(e) => {
-                eprintln!("{e}");
-                None
-            }
-        }) else {
-            return state.into();
+            Err(e) => return Err(e.to_string()),
         };
 
-        let header = crate::plugins::json::JsonFormatPlugin.run(&header);
-        let body = crate::plugins::json::JsonFormatPlugin.run(&body);
+        let header = crate::plugins::json::JsonFormatPlugin.run(&header)?;
+        let body = crate::plugins::json::JsonFormatPlugin.run(&body)?;
 
-        (header + "." + &body + "." + jwt_parts[2]).into()
+        Ok((header + "." + &body + "." + jwt_parts[2]).into())
     }
 
     fn plugin_type(&self) -> String {

@@ -1,6 +1,6 @@
 use base64::{decode, encode};
 
-use crate::plugin::{Plugin, PluginMetadata};
+use crate::plugin::{Plugin, PluginMetadata, PluginResult};
 
 #[derive(Debug)]
 pub struct Base64DecodePlugin;
@@ -22,19 +22,13 @@ impl Plugin for Base64DecodePlugin {
         }
     }
 
-    fn run(&self, state: &str) -> String {
+    fn run(&self, state: &str) -> PluginResult {
         match decode(state) {
             Ok(decoded_bytes) => match String::from_utf8(decoded_bytes) {
-                Ok(new_state) => new_state,
-                Err(e) => {
-                    eprintln!("{e}");
-                    state.to_owned()
-                }
+                Ok(new_state) => Ok(new_state),
+                Err(e) => Err(e.to_string()),
             },
-            Err(e) => {
-                eprintln!("{e}");
-                state.to_owned()
-            }
+            Err(e) => Err(e.to_string()),
         }
     }
 
@@ -63,8 +57,8 @@ impl Plugin for Base64EncodePlugin {
         }
     }
 
-    fn run(&self, state: &str) -> String {
-        encode(state)
+    fn run(&self, state: &str) -> PluginResult {
+        Ok(encode(state))
     }
 
     fn plugin_type(&self) -> String {

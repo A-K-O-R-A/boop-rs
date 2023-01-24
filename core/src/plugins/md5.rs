@@ -2,7 +2,7 @@ use std::fmt::Debug;
 
 use md5::compute;
 
-use crate::plugin::{Plugin, PluginMetadata};
+use crate::plugin::{Plugin, PluginMetadata, PluginResult};
 
 #[derive(Debug)]
 pub struct Md5HashPlugin;
@@ -21,10 +21,10 @@ impl Plugin for Md5HashPlugin {
         }
     }
 
-    fn run(&self, state: &str) -> String {
+    fn run(&self, state: &str) -> PluginResult {
         let digest = compute(state);
 
-        format!("{:x}", digest)
+        Ok(format!("{:x}", digest))
     }
 
     fn plugin_type(&self) -> String {

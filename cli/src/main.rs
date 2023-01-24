@@ -14,6 +14,7 @@ struct Cli {
 #[derive(Debug)]
 pub enum BoopError {
     PluginNotFound(String),
+    PluginError { plugin_id: String, error: String },
     IoError(io::Error),
 }
 

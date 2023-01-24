@@ -2,7 +2,7 @@ use std::vec;
 
 use urlencoding::{decode, encode};
 
-use crate::plugin::{Plugin, PluginMetadata};
+use crate::plugin::{Plugin, PluginMetadata, PluginResult};
 
 #[derive(Debug)]
 pub struct UrlDecodePlugin;
@@ -24,13 +24,10 @@ impl Plugin for UrlDecodePlugin {
         }
     }
 
-    fn run(&self, state: &str) -> String {
+    fn run(&self, state: &str) -> PluginResult {
         match decode(state) {
-            Ok(new_state) => new_state.into(),
-            Err(e) => {
-                eprintln!("{e}");
-                state.to_owned()
-            }
+            Ok(new_state) => Ok(new_state.into()),
+            Err(e) => Err(e.to_string()),
         }
     }
 
@@ -59,8 +56,8 @@ impl Plugin for UrlEncodePlugin {
         }
     }
 
-    fn run(&self, state: &str) -> String {
-        encode(state).into()
+    fn run(&self, state: &str) -> PluginResult {
+        Ok(encode(state).into())
     }
 
     fn plugin_type(&self) -> String {

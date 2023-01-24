@@ -1,4 +1,4 @@
-use crate::plugin::{Plugin, PluginMetadata};
+use crate::plugin::{Plugin, PluginMetadata, PluginResult};
 
 #[derive(Debug)]
 pub struct HTMLDecodePlugin;
@@ -20,8 +20,8 @@ impl Plugin for HTMLDecodePlugin {
         }
     }
 
-    fn run(&self, state: &str) -> String {
-        html_escape::decode_html_entities(state).into_owned()
+    fn run(&self, state: &str) -> PluginResult {
+        Ok(html_escape::decode_html_entities(state).into_owned())
     }
 
     fn plugin_type(&self) -> String {
@@ -49,8 +49,8 @@ impl Plugin for HTMLEncodePlugin {
         }
     }
 
-    fn run(&self, state: &str) -> String {
-        html_escape::encode_safe(state).to_string()
+    fn run(&self, state: &str) -> PluginResult {
+        Ok(html_escape::encode_safe(state).to_string())
     }
 
     fn plugin_type(&self) -> String {
