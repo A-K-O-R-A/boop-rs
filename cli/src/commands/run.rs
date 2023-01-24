@@ -38,10 +38,9 @@ pub fn run(
             let mut reader = BufReader::new(io::stdin());
             let mut input_state = String::new();
 
-            let res = reader.read_to_string(&mut input_state);
-            if res.is_err() {
-                return Err(BoopError::IoError(res.unwrap_err()));
-            }
+            reader
+                .read_to_string(&mut input_state)
+                .map_err(|e| BoopError::IoError(e))?;
 
             print!("{}", run_plugin(plugin, &input_state)?);
         };

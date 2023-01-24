@@ -24,19 +24,22 @@ pub fn load_path<P: AsRef<Path>>(path: P) -> io::Result<Vec<Box<dyn Plugin>>> {
         } else {
             match entry_path.extension() {
                 Some(extension) => {
-                    let extension = extension.to_str().unwrap().to_ascii_lowercase();
-                    match extension.as_str() {
-                        "js" => {
-                            #[cfg(feature = "loader_js")]
-                            plugins.push(Box::new(js::JsPlugin::from_path(entry_path)?));
-                        }
-                        _ => {
-                            eprintln!("Unsupported plugin type {}, check for disabled features or refer to the documentation", extension);
+                    if let Some(extension) = extension.to_str() {
+                        match extension.to_ascii_lowercase().as_str() {
+                            "js" => {
+                                #[cfg(feature = "loader_js")]
+                                plugins.push(Box::new(js::JsPlugin::from_path(entry_path)?));
+                            }
+                            _ => {
+                                // Unsupported files will be ignored
+                                // eprintln!("Unsupported plugin type {}, check for disabled features or refer to the documentation", extension);
+                            }
                         }
                     }
                 }
                 None => {
-                    eprintln!("Unsupported file format {}", entry_path.display());
+                    // Unsupported files will be ignored
+                    // eprintln!("Unsupported file format {}", entry_path.display());
                 }
             }
         }

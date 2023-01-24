@@ -16,7 +16,8 @@ impl Plugin for JsPlugin {
     }
 
     fn run(&self, state: &str) -> PluginResult {
-        let context = JsPlugin::create_context(&self.script).expect("Unable to create JS Context");
+        let context = JsPlugin::create_context(&self.script)
+            .map_err(|e| format!("Unable to create JS Context: {}", e.to_string()))?;
 
         let result = context.call_function("run", vec![state]);
 
