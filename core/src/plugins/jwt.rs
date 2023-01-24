@@ -20,6 +20,12 @@ fn pad_base64(str: &str) -> String {
 impl Plugin for JwtDecodePlugin {
     fn metadata(&self) -> PluginMetadata {
         PluginMetadata {
+            version: "1.0.0".to_owned(),
+            author: "AKORA".to_owned(),
+            tags: vec!["jsonwebtoken", "jwt", "decode"]
+                .iter()
+                .map(|&s| s.to_owned())
+                .collect(),
             id: "jwt.decode".to_owned(),
             name: "Decode JWT".to_owned(),
             description: "This decodes a JWT".to_owned(),
@@ -79,6 +85,12 @@ pub struct JwtFormatPlugin;
 impl Plugin for JwtFormatPlugin {
     fn metadata(&self) -> PluginMetadata {
         PluginMetadata {
+            version: "1.0.0".to_owned(),
+            author: "AKORA".to_owned(),
+            tags: vec!["jsonwebtoken", "jwt", "format"]
+                .iter()
+                .map(|&s| s.to_owned())
+                .collect(),
             id: "jwt.format".to_owned(),
             name: "JWT Format".to_owned(),
             description: "This formats a JWT to its pretty-printed JSON parts".to_owned(),

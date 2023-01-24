@@ -10,6 +10,9 @@ pub struct Md5HashPlugin;
 impl Plugin for Md5HashPlugin {
     fn metadata(&self) -> PluginMetadata {
         PluginMetadata {
+            version: "1.0.0".to_owned(),
+            author: "AKORA".to_owned(),
+            tags: vec!["md5", "hash"].iter().map(|&s| s.to_owned()).collect(),
             id: "md5.hash".to_owned(),
             name: "MD5 Hash".to_owned(),
             description: "This computes the MD5 Hash of the string".to_owned(),

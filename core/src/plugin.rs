@@ -1,5 +1,8 @@
 use std::cmp::Ordering;
 
+pub type PluginError = String;
+pub type PluginResult = Result<String, PluginError>;
+
 pub trait Plugin
 where
     Self: std::fmt::Debug,
@@ -8,6 +11,27 @@ where
     fn plugin_type(&self) -> String;
     fn run(&self, state: &str) -> String;
 }
+
+#[derive(Debug, Clone)]
+pub struct PluginMetadata {
+    // !TODO Icon for GUI
+    pub version: String,
+    pub id: String,
+    pub author: String,
+    pub name: String,
+    pub description: String,
+    pub tags: Vec<String>,
+    pub input_type: String,
+    pub output_type: String,
+}
+
+/*
+
+Implementations
+
+
+
+*/
 
 impl PartialEq for dyn Plugin {
     fn eq(&self, other: &Self) -> bool {
@@ -26,15 +50,6 @@ impl PartialOrd for dyn Plugin {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
         Some(self.cmp(other))
     }
-}
-
-#[derive(Debug, Clone)]
-pub struct PluginMetadata {
-    pub id: String,
-    pub name: String,
-    pub description: String,
-    pub input_type: String,
-    pub output_type: String,
 }
 
 impl PartialEq for PluginMetadata {

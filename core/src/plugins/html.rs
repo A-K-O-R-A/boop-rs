@@ -6,6 +6,12 @@ pub struct HTMLDecodePlugin;
 impl Plugin for HTMLDecodePlugin {
     fn metadata(&self) -> PluginMetadata {
         PluginMetadata {
+            version: "1.0.0".to_owned(),
+            author: "AKORA".to_owned(),
+            tags: vec!["html", "decode"]
+                .iter()
+                .map(|&s| s.to_owned())
+                .collect(),
             id: "html.decode".to_owned(),
             name: "HTML Entities Decode".to_owned(),
             description: "This decodes HTML entities".to_owned(),
@@ -29,6 +35,12 @@ pub struct HTMLEncodePlugin;
 impl Plugin for HTMLEncodePlugin {
     fn metadata(&self) -> PluginMetadata {
         PluginMetadata {
+            version: "1.0.0".to_owned(),
+            author: "AKORA".to_owned(),
+            tags: vec!["html", "encode"]
+                .iter()
+                .map(|&s| s.to_owned())
+                .collect(),
             id: "html.encode".to_owned(),
             name: "HTML Entities Encode".to_owned(),
             description: "This encodes HTML entities".to_owned(),

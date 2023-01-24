@@ -14,22 +14,26 @@
 /** @returns {Metadata} */
 function metadata() {
   return {
-    id: "text.remove_newlines",
-    name: "Remove Newlines",
+    id: "color.rgb2hex",
+    name: "RGB to Hex",
     author: "AKORA",
     version: "1.0.0",
-    tags: ["text", "newlines"],
-    description: "This plugin removes all newline",
+    tags: ["rgb", "hex", "convert", "color"],
+    description: "Convert color from RGB to Hex format",
     inputType: "text",
     outputType: "text",
   };
 }
 
-/**
- * Run this plugin
- * @param {string} state
- * @returns {string}
- */
-function run(state) {
-  return state.replace(/(\n|  )/g, "");
+function main(rgb) {
+  const rgbArray = rgb.includes(",") ? rgb.split(",") : rgb.split(" ");
+
+  if (rgbArray.length !== 3) error("Invalid RGB format");
+
+  try {
+    let hex = "#" + rgbArray.map((c) => parseInt(c).toString(16)).join();
+    return hex.toUpperCase();
+  } catch (_) {
+    return error("Invalid RGB value");
+  }
 }

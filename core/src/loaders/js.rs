@@ -1,13 +1,11 @@
 use crate::plugin::{Plugin, PluginMetadata};
 use quick_js::{Context, ExecutionError, JsValue};
-use std::collections::HashMap;
 use std::fs;
 use std::io;
 
 #[derive(Debug)]
 pub struct JsPlugin {
     pub metadata: PluginMetadata,
-    //context: Option<Context>,
     script: String,
 }
 
@@ -79,29 +77,29 @@ impl JsPlugin {
 
 impl PluginMetadata {
     pub fn from_js_context(context: &mut Context) -> Result<Self, ExecutionError> {
-        let obj = context.eval_as::<HashMap<String, String>>("metadata()")?;
+        //let obj = context.eval_as::<String>("metadata()")?;
 
-        let id = obj.get("id").expect("Plugin id is needed").to_owned();
+        let id = context.eval_as::<String>("metadata().id")?;
 
-        let name = obj.get("name").expect("Plugin name is needed").to_owned();
+        let author = context.eval_as::<String>("metadata().author")?;
 
-        let description = obj
-            .get("description")
-            .expect("Plugin description is needed")
-            .to_owned();
+        let version = context.eval_as::<String>("metadata().version")?;
 
-        let input_type = obj
-            .get("inputType")
-            .expect("Plugin name is needed")
-            .to_owned();
+        let name = context.eval_as::<String>("metadata().name")?;
 
-        let output_type = obj
-            .get("outputType")
-            .expect("Plugin id is needed")
-            .to_owned();
+        let description = context.eval_as::<String>("metadata().description")?;
+
+        let input_type = context.eval_as::<String>("metadata().inputType")?;
+
+        let output_type = context.eval_as::<String>("metadata().outputType")?;
+
+        let tags = context.eval_as::<Vec<String>>("metadata().tags")?;
 
         Ok(Self {
             id,
+            author,
+            version,
+            tags,
             name,
             description,
             input_type,

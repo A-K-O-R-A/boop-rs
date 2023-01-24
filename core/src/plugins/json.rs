@@ -6,6 +6,12 @@ pub struct JsonStringifyPlugin;
 impl Plugin for JsonStringifyPlugin {
     fn metadata(&self) -> PluginMetadata {
         PluginMetadata {
+            version: "1.0.0".to_owned(),
+            author: "AKORA".to_owned(),
+            tags: vec!["json", "stringify"]
+                .iter()
+                .map(|&s| s.to_owned())
+                .collect(),
             id: "json.stringify".to_owned(),
             name: "Stringify json".to_owned(),
             description: "This stringifies a json string".to_owned(),
@@ -32,6 +38,12 @@ pub struct JsonParsePlugin;
 impl Plugin for JsonParsePlugin {
     fn metadata(&self) -> PluginMetadata {
         PluginMetadata {
+            version: "1.0.0".to_owned(),
+            author: "AKORA".to_owned(),
+            tags: vec!["json", "parse"]
+                .iter()
+                .map(|&s| s.to_owned())
+                .collect(),
             id: "json.parse".to_owned(),
             name: "De-Stringify json".to_owned(),
             description: "This de-stringifies a double stringified json object".to_owned(),
@@ -67,6 +79,12 @@ pub struct JsonFormatPlugin;
 impl Plugin for JsonFormatPlugin {
     fn metadata(&self) -> PluginMetadata {
         PluginMetadata {
+            version: "1.0.0".to_owned(),
+            author: "AKORA".to_owned(),
+            tags: vec!["json", "format"]
+                .iter()
+                .map(|&s| s.to_owned())
+                .collect(),
             id: "json.format".to_owned(),
             name: "Format/Pretty-print json".to_owned(),
             description: "This pretty prints an json string".to_owned(),
@@ -96,6 +114,12 @@ pub struct JsonMinifyPlugin;
 impl Plugin for JsonMinifyPlugin {
     fn metadata(&self) -> PluginMetadata {
         PluginMetadata {
+            version: "1.0.0".to_owned(),
+            author: "AKORA".to_owned(),
+            tags: vec!["json", "minify"]
+                .iter()
+                .map(|&s| s.to_owned())
+                .collect(),
             id: "json.minify".to_owned(),
             name: "Minify json".to_owned(),
             description: "This minfies an json string".to_owned(),
