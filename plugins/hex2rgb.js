@@ -14,38 +14,36 @@
 /** @returns {Metadata} */
 function metadata() {
   return {
-    id: "color.rgb2hex",
-    name: "RGB to Hex",
+    id: "color.hex2rgb",
+    name: "Hex to RGB",
     author: "AKORA",
     version: "1.0.0",
     tags: ["rgb", "hex", "convert", "color"],
-    description: "Convert color from RGB to Hex format",
+    description: "Convert color from Hex to RGB format",
     inputType: "text",
     outputType: "text",
   };
 }
 
-const reg = /(rgb\()?(\d{1,3}(,| )){2}\d{1,3}(\)?)/;
+const reg = /#[0-9a-fA-F]{6}/;
 
 /**
  *
- * @param {string} rgb
+ * @param {string} hex
  * @returns {string}
  */
-function run(rgb) {
-  if (!reg.test(rgb)) throw "Invalid RGB format";
-  rgb = rgb.replace("rgb(", "").replace(")").replaceAll(" ", ",");
+function run(hex) {
+  if (!reg.test(hex)) throw "Invalid HEX color";
 
-  const rgbArray = rgb.split(",");
-
-  if (rgbArray.length !== 3) throw "Invalid RGB format";
+  hex = hex.slice(1); // Remove '#'
 
   try {
-    let hex =
-      "#" +
-      rgbArray.map((c) => parseInt(c).toString(16).padStart(2, "0")).join("");
-    return hex.toUpperCase();
-  } catch (_) {
-    return error("Invalid RGB value");
+    let r = parseInt(hex.slice(0, 2), 16);
+    let g = parseInt(hex.slice(2, 4), 16);
+    let b = parseInt(hex.slice(4, 6), 16);
+
+    return `${r},${g},${b}`;
+  } catch (e) {
+    throw "Invalid RGB value" + e;
   }
 }

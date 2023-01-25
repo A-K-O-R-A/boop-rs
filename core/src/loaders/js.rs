@@ -24,16 +24,15 @@ impl Plugin for JsPlugin {
         match result {
             Ok(value) => match value {
                 JsValue::String(new_state) => Ok(new_state),
-                _ => Err(format!(
-                    "Plugin {} returned value taht is not a string",
-                    self.metadata.id
-                )),
+                _ => Err("Returned value is not of type string".to_owned()),
             },
-            Err(e) => Err(format!(
-                "Plugin {} threw JS runtime error: {}",
-                self.metadata.id,
-                e.to_string()
-            )),
+            Err(e) => match e {
+                ExecutionError::Exception(ref val) => match val {
+                    JsValue::String(s) => Err(s.to_owned()),
+                    _ => Err(e.to_string()),
+                },
+                _ => Err(e.to_string()),
+            },
         }
     }
 
