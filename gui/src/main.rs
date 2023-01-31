@@ -17,7 +17,7 @@ fn main() {
         ..Default::default()
     };
     eframe::run_native(
-        "Confirm exit",
+        "Boop RS",
         options,
         Box::new(|_cc| {
             Box::new(app::BoopRs {

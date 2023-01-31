@@ -44,12 +44,98 @@ cargo install --git https://github.com/A-K-O-R-A/boop-rs/ boop
 
 The programm is shipped with some default plugins embedded into the executable and a loader for js plugins.
 
-## Plugins
-By default a few plugins directly embedded into the application are provided and always available but there is also an option to use external plugins. Right now only external plugins in javascript are supported. You can easily write your own plugins by just copying one of the examples in the `plugins` folder and changing the two functions.
+## Plugins & Loaders
 
-The plugin just needs to export two functions `metadata(): Metadata` and `run(state: string): string` and are loaded at runtime, so it it is very similiar to the plugins used by the original boop app.
+### Default plugins
+The `core` library exports some default plugins, by default these plugins are directly embedded into the application and are always available. These default plugins have the advantage of being blazingly fast so you can use them on huge files without problems.  
 
-Other loaders than the javascript one (provided by the [`quick-js`](https://github.com/theduke/quickjs-rs) crate) might be added in the future(for example `lua`) but are currently out of scope for this project.
+
+<details>
+<summary><a href="https://crates.io/crates/base64">base64</a></summary>
+
+ * base64.decode
+ * base64.encode
+
+</details>
+
+
+
+<details>
+<summary><a href="https://crates.io/crates/html-escape">html</a></summary>
+
+ * html.decode
+ * html.encode
+
+</details>
+
+
+
+<details>
+<summary><a href="https://crates.io/crates/json">json</a></summary>
+
+ * json.stringify
+ * json.parse
+ * json.format
+ * json.minify
+
+</details>
+
+
+
+<details>
+<summary>jwt</summary>
+
+ * jwt.decode
+ * jwt.format
+
+</details>
+
+
+
+<details>
+<summary><a href="https://crates.io/crates/md5">md5</a></summary>
+
+ * md5.hash
+</details>
+
+
+
+<details>
+<summary>text</summary>
+
+ * text.lowercase
+ * text.uppercase
+ * text.reverse
+ * text.remove_newlines
+ * text.count_chars
+ * text.count_lines
+
+</details>
+
+
+
+<details>
+<summary><a href="https://crates.io/crates/urlencoding">url</a></summary>
+
+ * url.decode
+ * url.encode
+
+</details>
+
+If you for some reason want to override these plugins you can turn of the individual features when compiling.
+
+### Javascript
+Of course external plugins are also supported. Right now there is only a loader for Javascript plugins implemented via the [`quick-js`](https://github.com/theduke/quickjs-rs) crate. You can easily write your own javascript plugins by just copying one of the examples in the `plugins` folder and changing the two functions.
+
+The plugins need to have two functions `metadata(): Metadata` and `run(state: string): string`. When the plugins get loaded the `metadata()` function is executed once and its results get stored in memory. The `run` function get executed every time the plugin will be run with a single argument of the type `string`. Errors can be thrown by using the `throw` keyword (for example `throw "Invalid RGB notation"`).
+
+
+### Other loaders
+In the future it is planned to implement more loaders for languages like `lua`, but currently it is not the main focus of this project to implement a lot of diffrent loaders.
 
 ## GUI 
+![Screenshot](./gui.png)
+
+(Currently this the state of the GUI which, admittedly does not even look close to the orginal)
+
 The original Boop App has a GUI instead of CLI so originally I wanted to recreate that, unfortunatly writing a GUI application in rust without any prior knowledge turned out to be harder than I thought. So for now this project is manly focused on the CLI part.
