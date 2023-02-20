@@ -68,10 +68,10 @@ jobs:
             shell: bash
             install-dist: curl --proto '=https' --tlsv1.2 -L -sSf https://github.com/axodotdev/cargo-dist/releases/download/v0.0.2/installer.sh | sh
           # Windows only works with mysys2 becuase of quick-js
-          - target: x86_64-pc-windows-gnu
-            os: windows-2022
-            shell: msys2 {0}
-            install-dist: irm 'https://github.com/axodotdev/cargo-dist/releases/download/v0.0.2/installer.ps1' | iex
+          # - target: x86_64-pc-windows-gnu
+           # os: windows-2022
+           # shell: msys2 {0}
+           # install-dist: irm 'https://github.com/axodotdev/cargo-dist/releases/download/v0.0.2/installer.ps1' | iex
     runs-on: ${{ matrix.os }}
     defaults:
       run:
