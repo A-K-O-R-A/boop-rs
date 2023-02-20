@@ -203,7 +203,7 @@ dependencies = [
 
 [[package]]
 name = "boop_gui"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "core",
  "eframe",
@@ -409,7 +409,7 @@ dependencies = [
 
 [[package]]
 name = "core"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "base64",
  "cfg-if",
