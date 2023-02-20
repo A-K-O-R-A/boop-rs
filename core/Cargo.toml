@@ -2,6 +2,7 @@
 name = "core"
 version = "0.1.0"
 edition = "2021"
+publish = false
 
 [features]
 default = ["default_plugins", "default_loaders"]
