@@ -12,7 +12,10 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Cache
-      uses: actions/cache@v3.2.5
+      id: cache-cargo
+      uses: actions/cache@v3
+      env:
+        cache-name: cache-cargo-crates
       with:
         # A list of files, directories, and wildcard patterns to cache and restore
         path: |
