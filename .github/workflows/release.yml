@@ -86,6 +86,7 @@ jobs:
         with:
           # A list of files, directories, and wildcard patterns to cache and restore
           path: |
+            ./target/
             ~/.cargo/bin/
             ~/.cargo/registry/index/
             ~/.cargo/registry/cache/
