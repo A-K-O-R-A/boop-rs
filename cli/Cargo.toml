@@ -3,9 +3,13 @@ name = "boop"
 version = "0.2.0"
 edition = "2021"
 publish = false
+repository = "https://github.com/A-K-O-R-A/boop-rs"
 
 [package.metadata.release]
 release = false
+
+[package.metadata.dist]
+dist = true
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
